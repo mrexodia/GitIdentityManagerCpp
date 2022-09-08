@@ -32,12 +32,14 @@ You should create a file name `~/git-identity.json` that contains your identitie
         "user.name": "John Doe",
         "user.email": "john.doe@personal.space",
         "user.signingkey": "12345566",
+        "credential.username": "johnpersonal",
         "commit.gpgsign": "true",
         "tag.gpgsign": "true"
     },
     {
         "user.name": "John Doe",
         "user.email": "jdoe@office.corp",
+        "credential.username": "johnoffice",
         "user.signingkey": "",
         "commit.gpgsign": "false",
         "tag.gpgsign": "false"
@@ -47,6 +49,14 @@ You should create a file name `~/git-identity.json` that contains your identitie
 
 You can now run `git identity` to change your identity in a local repository. You can use `git identity check` in scripts to see if a local identity is set.
 
-### Git hooks
+### Global configuration
 
-It is recommended to set up a global `pre-commit` hook template. A sample hook is provided (`.git-templates` directory in this repository) that checks your identity before committing. See [this post](https://santexgroup.com/blog/create-a-global-git-hook-to-check-flake8-before-each-commit/) for more details.
+The following configuration is recommended to prevent accidents:
+
+```bash
+git config --global user.useConfigOnly true
+git config --global --unset user.name
+git config --global --unset user.email
+```
+
+An alternative is to set up a global `pre-commit` hook template. A sample hook is provided (`.git-templates` directory in this repository) that checks your identity before committing. See [this post](https://santexgroup.com/blog/create-a-global-git-hook-to-check-flake8-before-each-commit/) for more details.

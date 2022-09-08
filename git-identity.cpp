@@ -4,10 +4,11 @@
 #include <stdexcept>
 #include <string>
 #include <array>
+#include <fstream>
 
-// I'm doing this because std::string cannot be nullptr. So that's why the unique_ptr<std::string> exists!
-// OH MY GOD
-std::unique_ptr<std::string> exec(const std::string& cmd)
+#include "json.hpp"
+
+static std::unique_ptr<std::string> exec(const std::string& cmd)
 {
 	auto stream = popen(cmd.c_str(), "r");
 	if(!stream)
@@ -22,7 +23,7 @@ std::unique_ptr<std::string> exec(const std::string& cmd)
 	return data;
 }
 
-std::unique_ptr<std::string> git(const std::string& cmd)
+static std::unique_ptr<std::string> git(const std::string& cmd)
 {
 	auto stdout = exec("git " + cmd);
 	while(stdout && stdout->size() && (stdout->at(stdout->size() - 1) == '\r' || stdout->at(stdout->size() - 1) == '\n'))
@@ -32,10 +33,7 @@ std::unique_ptr<std::string> git(const std::string& cmd)
 	return stdout;
 }
 
-#include "json.hpp"
-#include <fstream>
-
-std::unique_ptr<size_t> parseSize(const std::string& str)
+static std::unique_ptr<size_t> parseSize(const std::string& str)
 {
 	if(str.empty())
 		return nullptr;
